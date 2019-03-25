@@ -8,11 +8,10 @@
 
 import UIKit
 
-typealias actionBlock = ((NSInteger) -> Void)
-
-
 class CLGCDTimer: NSObject {
     
+    typealias actionBlock = ((NSInteger) -> Void)
+
     ///执行时间
     private var interval: TimeInterval!
     ///延迟时间
@@ -105,6 +104,9 @@ extension CLGCDTimer {
 }
 
 class CLGCDTimerManager: NSObject {
+    
+    typealias actionBlock = ((NSInteger) -> Void)
+    
     private static let sharedManager: CLGCDTimerManager = CLGCDTimerManager()
     private var timerObjectCache: Dictionary<String, CLGCDTimer> = Dictionary()
     private let semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
