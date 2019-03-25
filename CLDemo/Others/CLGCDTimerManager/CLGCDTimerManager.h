@@ -20,11 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
  @param repeats 是否重复
  @param action 响应
  */
-- (instancetype)initWithInterval:(NSTimeInterval)interval
-                       delaySecs:(NSTimeInterval)delaySecs
-                           queue:(dispatch_queue_t)queue
-                         repeats:(BOOL)repeats
-                          action:(nullable void(^)(NSInteger actionTimes))action;
+- (instancetype _Nonnull)initWithInterval:(NSTimeInterval)interval
+                                delaySecs:(NSTimeInterval)delaySecs
+                                    queue:(dispatch_queue_t _Nullable)queue
+                                  repeats:(BOOL)repeats
+                                   action:( void(^ _Nullable)(NSInteger actionTimes))action;
 /*响应次数*/
 @property (nonatomic, assign, readonly) NSInteger actionTimes;
 
@@ -39,14 +39,14 @@ NS_ASSUME_NONNULL_BEGIN
 /**恢复定时器*/
 - (void)resume;
 /**替换旧的响应*/
-- (void)replaceOldAction:(void(^)(NSInteger actionTimes))action;
+- (void)replaceOldAction:(void(^ _Nonnull)(NSInteger actionTimes))action;
 
 @end
 
 @interface CLGCDTimerManager : NSObject
 
 ///初始化
-+ (instancetype)sharedManager;
++ (instancetype _Nonnull)sharedManager;
 
 /**
  创建定时器，需要调用开始开启，如果存在定时器，不会重新创建
@@ -57,26 +57,25 @@ NS_ASSUME_NONNULL_BEGIN
  @param repeats 是否重复
  @param action 响应
  */
-- (void)scheduledTimerWithName:(NSString *)name
+- (void)scheduledTimerWithName:( NSString * _Nonnull)name
                       interval:(NSTimeInterval)interval
                      delaySecs:(NSTimeInterval)delaySecs
-                         queue:(dispatch_queue_t)queue
+                         queue:(dispatch_queue_t _Nullable)queue
                        repeats:(BOOL)repeats
-                        action:(void(^)(NSInteger actionTimes))action;
+                        action:(void(^ _Nullable)(NSInteger actionTimes))action;
 
 /**开始定时器*/
-- (void)start:(NSString *)name;
+- (void)start:(NSString *_Nonnull)name;
 /**执行一次定时器响应*/
-- (void)responseOnce:(NSString *)name;
+- (void)responseOnce:(NSString *_Nonnull)name;
 /**取消定时器*/
-- (void)cancel:(NSString *)name;
+- (void)cancel:(NSString *_Nonnull)name;
 /**暂停定时器*/
-- (void)suspend:(NSString *)name;
+- (void)suspend:(NSString *_Nonnull)name;
 /**恢复定时器*/
-- (void)resume:(NSString *)name;
+- (void)resume:(NSString *_Nonnull)name;
 /**获取定时器*/
-- (CLGCDTimer *)timer:(NSString *)name;
-
+- (CLGCDTimer *_Nullable)timer:(NSString *_Nonnull)name;
 @end
 
 NS_ASSUME_NONNULL_END
