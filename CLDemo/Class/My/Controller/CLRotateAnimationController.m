@@ -62,7 +62,6 @@
         [self.view addSubview:roundAnimationView];
         [roundAnimationView startAnimation];
     }
-    
 
 }
 
