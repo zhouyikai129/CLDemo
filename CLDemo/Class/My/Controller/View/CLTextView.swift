@@ -36,7 +36,7 @@ class CLTextViewConfigure: NSObject {
     var maxBytesLength: NSInteger = 520
     ///输入框间距
     var edgeInsets: UIEdgeInsets = .zero
-    ///
+    ///键盘风格
     var keyboardAppearance: UIKeyboardAppearance = .light
     
     fileprivate class func defaultConfigure() -> CLTextViewConfigure {
@@ -133,27 +133,28 @@ class CLTextView: UIView {
         return textViewHeight
     }
     ///更新默认配置
-    func updateWithConfigure(_ configure: ((CLTextViewConfigure) -> Void)?) {
-        configure?(self.configure);
+    func updateWithConfigure(_ configureBlock: ((CLTextViewConfigure) -> Void)?) {
+        configureBlock?(configure);
         
-        backgroundColor = self.configure.backgroundColor
+        backgroundColor = configure.backgroundColor
         
-        textView.textColor = self.configure.textColor
-        textView.font = self.configure.textFont
-        textView.tintColor = self.configure.cursorColor
-        
-        placeholderLabel.text = self.configure.placeholder
-        placeholderLabel.textColor = self.configure.placeholderTextColor
+        textView.textColor = configure.textColor
+        textView.font = configure.textFont
+        textView.tintColor = configure.cursorColor
+        textView.keyboardAppearance = configure.keyboardAppearance
+
+        placeholderLabel.text = configure.placeholder
+        placeholderLabel.textColor = configure.placeholderTextColor
         placeholderLabel.font = textView.font
         
-        lengthLabel.font = self.configure.lengthFont
-        lengthLabel.textColor = self.configure.lengthColor
+        lengthLabel.font = configure.lengthFont
+        lengthLabel.textColor = configure.lengthColor
         
         textView.snp.remakeConstraints { (make) in
-            make.left.equalTo(self.configure.edgeInsets.left).priority(.low)
-            make.right.equalTo(self.configure.edgeInsets.right).priority(.low)
-            make.top.equalTo(self.configure.edgeInsets.top).priority(.low)
-            make.bottom.equalTo(lengthLabel.snp.top).offset(self.configure.edgeInsets.bottom).priority(.low)
+            make.left.equalTo(configure.edgeInsets.left).priority(.low)
+            make.right.equalTo(configure.edgeInsets.right).priority(.low)
+            make.top.equalTo(configure.edgeInsets.top).priority(.low)
+            make.bottom.equalTo(lengthLabel.snp.top).offset(configure.edgeInsets.bottom).priority(.low)
             make.height.equalTo(defaultHeight())
         }
         
