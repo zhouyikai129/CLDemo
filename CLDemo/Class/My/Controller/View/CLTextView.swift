@@ -43,7 +43,32 @@ class CLTextViewConfigure: NSObject {
     }
 }
 
+protocol CLTextViewDelegate: class {
+    ///输入改变
+    func textViewDidChange(textView:CLTextView) -> Void
+    ///开始输入
+    func textViewBeginInput(textView:CLTextView) -> Void
+    ///结束输入
+    func textViewEndInput(textView:CLTextView) -> Void
+}
+extension CLTextViewDelegate {
+    ///输入改变
+    func textViewDidChange(textView:CLTextView) -> Void {
+        
+    }
+    ///开始输入
+    func textViewBeginInput(textView:CLTextView) -> Void {
+        
+    }
+    ///结束输入
+    func textViewEndInput(textView:CLTextView) -> Void {
+        
+    }
+}
+
 class CLTextView: UIView {
+    ///代理
+    weak var delegate: CLTextViewDelegate?
     ///输入框
     private let textView: UITextView = UITextView()
     ///占位文字laebl
@@ -52,6 +77,8 @@ class CLTextView: UIView {
     private let lengthLabel: UILabel = UILabel()
     ///默认配置
     private let configure: CLTextViewConfigure = CLTextViewConfigure.defaultConfigure()
+    ///输入的文字
+    private (set) var text: String = ""
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -139,6 +166,8 @@ extension CLTextView: UITextViewDelegate {
                 return
             }
         }
+        //是否变化
+        var isChange: Bool = true
         //限制字数
         if textView.text.utf16.count > configure.maxCount {
             var range: NSRange
@@ -148,6 +177,7 @@ extension CLTextView: UITextViewDelegate {
                 range = (textView.text as NSString).rangeOfComposedCharacterSequence(at: i)
                 inputCount += (textView.text as NSString).substring(with: range).count
                 if (inputCount > configure.maxCount) {
+                    isChange = false
                     let newText = (textView.text as NSString).substring(with: NSRange.init(location: 0, length: range.location))
                     textView.text = newText
                 }
@@ -164,12 +194,15 @@ extension CLTextView: UITextViewDelegate {
                 range = (textView.text as NSString).rangeOfComposedCharacterSequence(at: i)
                 byteLength += strlen((textView.text as NSString).substring(with: range))
                 if (byteLength > configure.maxBytesLength) {
+                    isChange = false
                     let newText = (textView.text as NSString).substring(with: NSRange.init(location: 0, length: range.location))
                     textView.text = newText
                 }
                 i += range.length
             }
         }
+        
+        text = textView.text
         
         let string = String.init(format: "%ld/%ld", textView.text.bytesLength(), configure.maxBytesLength)
         lengthLabel.text = string
@@ -183,6 +216,18 @@ extension CLTextView: UITextViewDelegate {
         setNeedsLayout()
         layoutIfNeeded()
         textView.scrollRangeToVisible(NSRange(location: textView.selectedRange.location, length: 1))
+        
+        if  isChange {
+            delegate?.textViewDidChange(textView: self)
+        }
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        delegate?.textViewBeginInput(textView: self)
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        delegate?.textViewEndInput(textView: self)
     }
 }
 

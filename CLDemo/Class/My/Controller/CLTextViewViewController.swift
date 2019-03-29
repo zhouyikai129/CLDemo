@@ -25,6 +25,22 @@ class CLTextViewViewController: CLBaseViewController {
             textView.updateWithConfigure({ (configure) in
                 configure.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: -10, right: -10)
             })
+            textView.delegate = self
         }
     }
 }
+
+extension CLTextViewViewController: CLTextViewDelegate {
+    func textViewDidChange(textView: CLTextView) {
+        print("==========\(textView.text)")
+    }
+    
+    func textViewBeginInput(textView: CLTextView) {
+        print("开始输入")
+    }
+    
+    func textViewEndInput(textView: CLTextView) {
+        print("结束输入")
+    }
+}
+
