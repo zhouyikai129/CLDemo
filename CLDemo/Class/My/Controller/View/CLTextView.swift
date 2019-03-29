@@ -47,9 +47,9 @@ protocol CLTextViewDelegate: class {
     ///输入改变
     func textViewDidChange(textView:CLTextView) -> Void
     ///开始输入
-    func textViewBeginInput(textView:CLTextView) -> Void
+    func textViewBeginEditing(textView:CLTextView) -> Void
     ///结束输入
-    func textViewEndInput(textView:CLTextView) -> Void
+    func textViewEndEditing(textView:CLTextView) -> Void
 }
 extension CLTextViewDelegate {
     ///输入改变
@@ -57,11 +57,11 @@ extension CLTextViewDelegate {
         
     }
     ///开始输入
-    func textViewBeginInput(textView:CLTextView) -> Void {
+    func textViewBeginEditing(textView:CLTextView) -> Void {
         
     }
     ///结束输入
-    func textViewEndInput(textView:CLTextView) -> Void {
+    func textViewEndEditing(textView:CLTextView) -> Void {
         
     }
 }
@@ -223,11 +223,11 @@ extension CLTextView: UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        delegate?.textViewBeginInput(textView: self)
+        delegate?.textViewBeginEditing(textView: self)
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        delegate?.textViewEndInput(textView: self)
+        delegate?.textViewEndEditing(textView: self)
     }
 }
 

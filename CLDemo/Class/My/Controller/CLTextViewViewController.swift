@@ -31,16 +31,17 @@ class CLTextViewViewController: CLBaseViewController {
 }
 
 extension CLTextViewViewController: CLTextViewDelegate {
+    func textViewBeginEditing(textView: CLTextView) {
+        print("开始输入")
+    }
+    
+//    func textViewEndEditing(textView: CLTextView) {
+//        print("结束输入")
+//    }
+    
     func textViewDidChange(textView: CLTextView) {
         print("==========\(textView.text)")
     }
     
-    func textViewBeginInput(textView: CLTextView) {
-        print("开始输入")
-    }
-    
-    func textViewEndInput(textView: CLTextView) {
-        print("结束输入")
-    }
 }
 
