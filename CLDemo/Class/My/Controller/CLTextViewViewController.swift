@@ -20,7 +20,7 @@ class CLTextViewViewController: CLBaseViewController {
             view.addSubview(textView)
             textView.snp.makeConstraints({ (make) in
                 make.left.right.equalTo(0)
-                make.top.equalTo(100)
+                make.top.equalTo(100).priority(.high)
             })
             textView.updateWithConfigure({ (configure) in
                 configure.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: -10, right: -10)
