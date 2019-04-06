@@ -115,6 +115,12 @@ extension CLTextViewDelegate {
 class CLTextView: UIView {
     ///代理
     weak var delegate: CLTextViewDelegate?
+    ///高度
+    var height: CGFloat {
+        return textViewHeight() + configure.edgeInsets.top - configure.edgeInsets.bottom + (configure.showLengthLabel ? (lengthLabel.sizeThatFits(.zero).height - configure.edgeInsets.bottom) : 0)
+    }
+    ///frame
+    private var _frame: CGRect = .zero
     ///输入框
     private lazy var textView: UITextView = {
         let textView = UITextView()
@@ -163,6 +169,7 @@ class CLTextView: UIView {
         backgroundColor = configure.backgroundColor
         remakeConstraints()
     }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -206,10 +213,8 @@ class CLTextView: UIView {
             self.textView.scrollRangeToVisible(NSRange(location: self.textView.selectedRange.location, length: 1))
         }
     }
-    
     override func layoutSubviews() {
         super.layoutSubviews()
-        let height: CGFloat = textViewHeight() + configure.edgeInsets.top - configure.edgeInsets.bottom + (configure.showLengthLabel ? (lengthLabel.sizeThatFits(.zero).height - configure.edgeInsets.bottom) : 0)
         frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: frame.width, height: height)
     }
 }
