@@ -165,7 +165,9 @@ typedef NS_ENUM(NSInteger, kQRCodeDrawType) {
             @autoreleasepool {
                 BOOL shouldDisplay = [codePoints[indexY][indexX] boolValue];
                 if (shouldDisplay) {
-                    kQRCodeDrawType drawType = [self getRandomNumber:0 to:1];
+                    //类型随机
+                    kQRCodeDrawType drawType = arc4random() % 2;
+                    //颜色随机
                     UIColor *color = [self randomColor:configure.colorsArray];
                     //左上定位点
                     if (indexX < 8 && indexY < 8 ) {
@@ -205,42 +207,32 @@ typedef NS_ENUM(NSInteger, kQRCodeDrawType) {
     UIGraphicsEndImageContext();
     return image;
 }
-+(int)getRandomNumber:(int)from to:(int)to
-{
-    return (int)(from + (arc4random() % (to - from + 1)));
-}
-
+//MARK:JmoVxia---绘制点
 +(void)drawPointWithIndexX:(CGFloat)indexX indexY:(CGFloat)indexY delta:(CGFloat)delta color:(UIColor *)color drawType:(kQRCodeDrawType)drawType inContext:(CGContextRef)context {
-    
     UIBezierPath *bezierPath;
     if (drawType==CLQRCodeDrawTypeCircle) {
+        //圆
         CGFloat centerX = indexX * delta + 0.5 * delta;
         CGFloat centerY = indexY * delta + 0.5 * delta;
+        //0.8是增加原点直接间隙
         CGFloat radius = 0.5 * delta * 0.8;
         CGFloat startAngle = 0;
         CGFloat endAngle = 2 * M_PI;
         bezierPath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(centerX, centerY) radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-    }
-    else if (drawType==CLQRCodeDrawTypeSquare){
+        
+    }else if (drawType==CLQRCodeDrawTypeSquare){
+        //正方形
         bezierPath = [UIBezierPath bezierPathWithRect:CGRectMake(indexX * delta, indexY * delta, delta, delta)];
     }
-    
-    [self drawLinearGradient:context path:bezierPath.CGPath color:color.CGColor];
-    CGContextSaveGState(context);
-}
-
-
-+(void)drawLinearGradient:(CGContextRef)context path:(CGPathRef)path color:(CGColorRef)color{
-    
     CGContextSaveGState(context);
     CGContextSetShouldAntialias(context, YES);
-    CGContextSetFillColorWithColor(context, color);
-    CGContextAddPath(context, path);
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextAddPath(context, bezierPath.CGPath);
     CGContextDrawPath(context, kCGPathFill);
     CGContextRestoreGState(context);
-    
+    CGContextSaveGState(context);
 }
-
+//MARK:JmoVxia---随机颜色
 + (UIColor *)randomColor:(NSMutableArray<UIColor *> *)colorsArray {
     NSInteger i = arc4random() % colorsArray.count;
     return [colorsArray objectAtIndex:i];
