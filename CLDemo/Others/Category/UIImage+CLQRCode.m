@@ -1,0 +1,241 @@
+//
+//  UIImage+CLQRCode.m
+//  CLDemo
+//
+//  Created by AUG on 2019/4/5.
+//  Copyright © 2019 JmoVxia. All rights reserved.
+//
+
+#import "UIImage+CLQRCode.h"
+
+@interface CLCorrectionModel ()
+
+///二维码字符串
+@property (nonatomic, copy) NSString *text;
+///纠正率
+@property (nonatomic, assign) CLQRCodeCorrectionLevel correctionLevel;
+///对应纠错率二维码矩阵点数宽度倍数(px) 10-100,越大越清晰，消耗资源越多，生成二维码越慢
+@property (nonatomic, assign) NSInteger delta;
+///随机颜色数组
+@property (nonatomic, strong) NSMutableArray<UIColor *> *colorsArray;
+
+@end
+
+@implementation CLCorrectionModel
+
+- (instancetype)initWithText:(nonnull NSString *)text correctionLevel:(CLQRCodeCorrectionLevel) correctionLevel delta:(NSInteger) delta colorsArray:(NSMutableArray<UIColor *> *) colorsArray {
+    if (self = [super init]) {
+        self.text = text;
+        self.correctionLevel = correctionLevel;
+        self.delta = delta;
+        self.colorsArray = colorsArray;
+    }
+    return self;
+}
+
+@end
+
+typedef NS_ENUM(NSInteger, kQRCodeDrawType) {
+    CLQRCodeDrawTypeSquare = 0, // 正方形.
+    CLQRCodeDrawTypeCircle = 1, // 圆.
+};
+
+@implementation UIImage (CLQRCode)
+
+//MARK:JmoVxia---绘制二维码
++(nullable UIImage *)generateQRCodeWithModel:(nonnull CLCorrectionModel *)model {
+    if (model.text.length == 0)
+        return nil;
+    //使用自动释放池，防止内存爆增
+    @autoreleasepool {
+        CIImage *originalImg = [self createCIImageWithString:model.text correctionLevel:model.correctionLevel];
+        NSArray<NSArray *> *codePoints = [self getPixelsWithCIImage:originalImg];
+        //对应纠错率二维码矩阵点数宽度
+        CGFloat extent = originalImg.extent.size.width;
+        CGFloat size = MIN(MIN(model.delta, 10), 100) * extent;
+        return [self drawWithCodePoints:codePoints size:size colorsArray:model.colorsArray];
+    }
+}
+//MARK:JmoVxia---创建原始二维码
++(CIImage *)createCIImageWithString:(NSString *)string correctionLevel:(CLQRCodeCorrectionLevel)corLevel{
+    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    [filter setDefaults];
+    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+    [filter setValue:data forKeyPath:@"inputMessage"];
+    
+    NSString *corLevelString = nil;
+    switch (corLevel) {
+        case CLQRCodeCorrectionLevelLow:
+            corLevelString = @"L";
+            break;
+        case CLQRCodeCorrectionLevelNormal:
+            corLevelString = @"M";
+            break;
+        case CLQRCodeCorrectionLevelSuperior:
+            corLevelString = @"Q";
+            break;
+        case CLQRCodeCorrectionLevelHight:
+            corLevelString = @"H";
+            break;
+    }
+    [filter setValue:corLevelString forKey:@"inputCorrectionLevel"];
+    
+    CIImage *outputImage = [filter outputImage];
+    return outputImage;
+}
+//MARK:JmoVxia---// 将 `CIImage` 转成 `CGImage`
++(CGImageRef)convertCIImageToCGImageForCIImage:(CIImage *)image {
+    CGRect extent = CGRectIntegral(image.extent);
+    
+    size_t width = CGRectGetWidth(extent);
+    size_t height = CGRectGetHeight(extent);
+    CGColorSpaceRef cs = CGColorSpaceCreateDeviceGray();
+    CGContextRef bitmapRef = CGBitmapContextCreate(nil, width, height, 8, 0, cs, (CGBitmapInfo)kCGImageAlphaNone);
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CGImageRef bitmapImage = [context createCGImage:image fromRect:extent];
+    CGContextSetInterpolationQuality(bitmapRef, kCGInterpolationNone);
+    CGContextScaleCTM(bitmapRef, 1, 1);
+    CGContextDrawImage(bitmapRef, extent, bitmapImage);
+    
+    CGImageRef scaledImage = CGBitmapContextCreateImage(bitmapRef);
+    CGContextRelease(bitmapRef);
+    CGImageRelease(bitmapImage);
+    
+    return scaledImage;
+}
+//MARK:JmoVxia---将原始图片的所有点的色值保存到二维数组
++(NSArray<NSArray *>*)getPixelsWithCIImage:(CIImage *)image {
+    NSMutableArray *pixels = [NSMutableArray array];
+    
+    // 将系统生成的二维码从 `CIImage` 转成 `CGImageRef`.
+    CGImageRef imageRef = [self convertCIImageToCGImageForCIImage:image];
+    CGFloat width = CGImageGetWidth(imageRef);
+    CGFloat height = CGImageGetHeight(imageRef);
+    
+    // 创建一个颜色空间.
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    
+    // 开辟一段 unsigned char 的存储空间，用 rawData 指向这段内存.
+    // 每个 RGBA 色值的范围是 0-255，所以刚好是一个 unsigned char 的存储大小.
+    // 每张图片有 height * width 个点，每个点有 RGBA 4个色值，所以刚好是 height * width * 4.
+    // 这段代码的意思是开辟了 height * width * 4 个 unsigned char 的存储大小.
+    unsigned char *rawData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
+    
+    // 每个像素的大小是 4 字节.
+    NSUInteger bytesPerPixel = 4;
+    // 每行字节数.
+    NSUInteger bytesPerRow = width * bytesPerPixel;
+    // 一个字节8比特
+    NSUInteger bitsPerComponent = 8;
+    
+    // 将系统的二维码图片和我们创建的 rawData 关联起来，这样我们就可以通过 rawData 拿到指定 pixel 的内存地址.
+    CGContextRef context = CGBitmapContextCreate(rawData, width, height, bitsPerComponent, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
+    CGContextRelease(context);
+    for (int indexY = 0; indexY < height; indexY++) {
+        NSMutableArray *tepArrM = [NSMutableArray array];
+        for (int indexX = 0; indexX < width; indexX++) {
+            // 取出每个 pixel 的 RGBA 值，保存到矩阵中.
+            @autoreleasepool {
+                NSUInteger byteIndex = bytesPerRow * indexY + indexX * bytesPerPixel;
+                CGFloat red = (CGFloat)rawData[byteIndex];
+                CGFloat green = (CGFloat)rawData[byteIndex + 1];
+                CGFloat blue = (CGFloat)rawData[byteIndex + 2];
+                
+                BOOL shouldDisplay = red == 0 && green == 0 && blue == 0;
+                [tepArrM addObject:@(shouldDisplay)];
+                byteIndex += bytesPerPixel;
+            }
+        }
+        [pixels addObject:[tepArrM copy]];
+    }
+    free(rawData);
+    return [pixels copy];
+}
+//MARK:JmoVxia---根据二维码点数组绘制
++(UIImage *)drawWithCodePoints:(NSArray<NSArray *> *)codePoints size:(CGFloat)size colorsArray:(NSMutableArray<UIColor *> *) colorsArray{
+    CGFloat imgWH = size;
+    CGFloat delta = imgWH/codePoints.count;
+    
+    UIGraphicsBeginImageContext(CGSizeMake(imgWH, imgWH));
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    for (int indexY = 0; indexY < codePoints.count; indexY++) {
+        for (int indexX = 0; indexX < codePoints[indexY].count; indexX++) {
+            @autoreleasepool {
+                BOOL shouldDisplay = [codePoints[indexY][indexX] boolValue];
+                if (shouldDisplay) {
+                    kQRCodeDrawType drawType = [self getRandomNumber:0 to:1];
+                    UIColor *color = [self randomColor:colorsArray];
+                    //左上定位点
+                    if (indexX < 8 && indexY < 8 ) {
+                        color = [UIColor blueColor];
+                        drawType = 0;
+                    }
+                    //右上定位点
+                    if (indexY < 8 && indexX >= codePoints.count - 8) {
+                        color = [UIColor redColor];
+                        drawType = 0;
+                    }
+                    //左下定位点
+                    if (indexX < 8 && indexY >= codePoints.count - 8) {
+                        color = [UIColor blueColor];
+                        if ((indexX > 2 && indexX < 6) && (indexY >= codePoints.count - 6 && indexY < codePoints.count - 2)) {
+                            color = [UIColor redColor];
+                        }
+                        drawType = 0;
+                    }
+                    //绘制点
+                    [self drawPointWithIndexX:indexX indexY:indexY delta:delta color:color drawType:drawType inContext:context];
+                }
+            }
+        }
+    }
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
++(int)getRandomNumber:(int)from to:(int)to
+{
+    return (int)(from + (arc4random() % (to - from + 1)));
+}
+
++(void)drawPointWithIndexX:(CGFloat)indexX indexY:(CGFloat)indexY delta:(CGFloat)delta color:(UIColor *)color drawType:(kQRCodeDrawType)drawType inContext:(CGContextRef)context {
+    
+    UIBezierPath *bezierPath;
+    if (drawType==CLQRCodeDrawTypeCircle) {
+        CGFloat centerX = indexX * delta + 0.5 * delta;
+        CGFloat centerY = indexY * delta + 0.5 * delta;
+        CGFloat radius = 0.5 * delta * 0.8;
+        CGFloat startAngle = 0;
+        CGFloat endAngle = 2 * M_PI;
+        bezierPath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(centerX, centerY) radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
+    }
+    else if (drawType==CLQRCodeDrawTypeSquare){
+        bezierPath = [UIBezierPath bezierPathWithRect:CGRectMake(indexX * delta, indexY * delta, delta, delta)];
+    }
+    
+    [self drawLinearGradient:context path:bezierPath.CGPath color:color.CGColor];
+    CGContextSaveGState(context);
+}
+
+
++(void)drawLinearGradient:(CGContextRef)context path:(CGPathRef)path color:(CGColorRef)color{
+    
+    CGContextSaveGState(context);
+    CGContextSetShouldAntialias(context, YES);
+    CGContextSetFillColorWithColor(context, color);
+    CGContextAddPath(context, path);
+    CGContextDrawPath(context, kCGPathFill);
+    CGContextRestoreGState(context);
+    
+}
+
++ (UIColor *)randomColor:(NSMutableArray<UIColor *> *)colorsArray {
+    NSInteger i = arc4random() % colorsArray.count;
+    return [colorsArray objectAtIndex:i];
+}
+
+@end
