@@ -8,29 +8,28 @@
 
 #import "UIImage+CLQRCode.h"
 
-@interface CLCorrectionModel ()
-
-///二维码字符串
-@property (nonatomic, copy) NSString *text;
-///纠正率
-@property (nonatomic, assign) CLQRCodeCorrectionLevel correctionLevel;
-///对应纠错率二维码矩阵点数宽度倍数(px) 10-100,越大越清晰，消耗资源越多，生成二维码越慢
-@property (nonatomic, assign) NSInteger delta;
-///随机颜色数组
-@property (nonatomic, strong) NSMutableArray<UIColor *> *colorsArray;
+@interface CLCorrectionConfigure ()
 
 @end
 
-@implementation CLCorrectionModel
+@implementation CLCorrectionConfigure
 
-- (instancetype)initWithText:(nonnull NSString *)text correctionLevel:(CLQRCodeCorrectionLevel) correctionLevel delta:(NSInteger) delta colorsArray:(NSMutableArray<UIColor *> *) colorsArray {
-    if (self = [super init]) {
-        self.text = text;
-        self.correctionLevel = correctionLevel;
-        self.delta = delta;
-        self.colorsArray = colorsArray;
++ (instancetype)initConfigure:(nonnull NSString *)text callBack:(void(^)(CLCorrectionConfigure *configure))callBack {
+    CLCorrectionConfigure *configure = [[CLCorrectionConfigure alloc] init];
+    configure.text = text;
+    configure.correctionLevel = CLQRCodeCorrectionLevelSuperior;
+    configure.delta = 30;
+    configure.colorsArray = [NSMutableArray arrayWithArray:@[[UIColor redColor], [UIColor orangeColor]]];
+    configure.leftTopOutColor = [UIColor cyanColor];
+    configure.leftTopInColor = [UIColor yellowColor];
+    configure.rightTopOutColor = [UIColor redColor];
+    configure.rightTopInColor = [UIColor orangeColor];
+    configure.leftBottomOutColor = [UIColor blueColor];
+    configure.leftBottomInColor = [UIColor greenColor];
+    if (callBack) {
+        callBack(configure);
     }
-    return self;
+    return configure;
 }
 
 @end
@@ -43,17 +42,17 @@ typedef NS_ENUM(NSInteger, kQRCodeDrawType) {
 @implementation UIImage (CLQRCode)
 
 //MARK:JmoVxia---绘制二维码
-+(nullable UIImage *)generateQRCodeWithModel:(nonnull CLCorrectionModel *)model {
-    if (model.text.length == 0)
++(nullable UIImage *)generateQRCodeWithConfigure:(nonnull CLCorrectionConfigure *)configure {
+    if (configure.text.length == 0)
         return nil;
     //使用自动释放池，防止内存爆增
     @autoreleasepool {
-        CIImage *originalImg = [self createCIImageWithString:model.text correctionLevel:model.correctionLevel];
+        CIImage *originalImg = [self createCIImageWithString:configure.text correctionLevel:configure.correctionLevel];
         NSArray<NSArray *> *codePoints = [self getPixelsWithCIImage:originalImg];
         //对应纠错率二维码矩阵点数宽度
         CGFloat extent = originalImg.extent.size.width;
-        CGFloat size = MIN(MIN(model.delta, 10), 100) * extent;
-        return [self drawWithCodePoints:codePoints size:size colorsArray:model.colorsArray];
+        CGFloat size = MIN(MIN(configure.delta, 10), 100) * extent;
+        return [self drawWithCodePoints:codePoints size:size configure:configure];
     }
 }
 //MARK:JmoVxia---创建原始二维码
@@ -154,7 +153,7 @@ typedef NS_ENUM(NSInteger, kQRCodeDrawType) {
     return [pixels copy];
 }
 //MARK:JmoVxia---根据二维码点数组绘制
-+(UIImage *)drawWithCodePoints:(NSArray<NSArray *> *)codePoints size:(CGFloat)size colorsArray:(NSMutableArray<UIColor *> *) colorsArray{
++(UIImage *)drawWithCodePoints:(NSArray<NSArray *> *)codePoints size:(CGFloat)size configure:(CLCorrectionConfigure *) configure{
     CGFloat imgWH = size;
     CGFloat delta = imgWH/codePoints.count;
     
@@ -167,22 +166,31 @@ typedef NS_ENUM(NSInteger, kQRCodeDrawType) {
                 BOOL shouldDisplay = [codePoints[indexY][indexX] boolValue];
                 if (shouldDisplay) {
                     kQRCodeDrawType drawType = [self getRandomNumber:0 to:1];
-                    UIColor *color = [self randomColor:colorsArray];
+                    UIColor *color = [self randomColor:configure.colorsArray];
                     //左上定位点
                     if (indexX < 8 && indexY < 8 ) {
-                        color = [UIColor blueColor];
+                        color = configure.leftTopOutColor;
+                        //内圈
+                        if ((indexX > 2 && indexX < 6) && (indexY >= 2 && indexY < 6)) {
+                            color = configure.leftTopInColor;
+                        }
                         drawType = 0;
                     }
                     //右上定位点
                     if (indexY < 8 && indexX >= codePoints.count - 8) {
-                        color = [UIColor redColor];
+                        color = configure.rightTopOutColor;
+                        //内圈
+                        if ((indexY > 2 && indexY < 6) && (indexX >= codePoints.count - 6 && indexX < codePoints.count - 2)) {
+                            color = configure.rightTopInColor;
+                        }
                         drawType = 0;
                     }
                     //左下定位点
                     if (indexX < 8 && indexY >= codePoints.count - 8) {
-                        color = [UIColor blueColor];
+                        color = configure.leftBottomOutColor;
+                        //内圈
                         if ((indexX > 2 && indexX < 6) && (indexY >= codePoints.count - 6 && indexY < codePoints.count - 2)) {
-                            color = [UIColor redColor];
+                            color = configure.leftBottomInColor;
                         }
                         drawType = 0;
                     }

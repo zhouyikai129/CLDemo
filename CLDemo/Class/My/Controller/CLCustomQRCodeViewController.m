@@ -28,8 +28,17 @@
 }
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-    CLCorrectionModel *model = [[CLCorrectionModel alloc] initWithText:@"https://www.baidu.com/" correctionLevel:CLQRCodeCorrectionLevelHight delta:100 colorsArray:@[[UIColor orangeColor], [UIColor redColor]]];
-    self.imageView.image = [UIImage generateQRCodeWithModel:model];
+    CLCorrectionConfigure *configure = [CLCorrectionConfigure initConfigure:@"https://www.baidu.com" callBack:^(CLCorrectionConfigure * _Nonnull configure) {
+        configure.leftTopOutColor = cl_RandomColor;
+        configure.leftTopInColor = cl_RandomColor;
+        configure.rightTopOutColor = cl_RandomColor;
+        configure.rightTopInColor = cl_RandomColor;
+        configure.leftBottomOutColor = cl_RandomColor;
+        configure.leftBottomInColor = cl_RandomColor;
+        configure.colorsArray = [NSMutableArray arrayWithArray:@[cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor]];
+    }];
+    
+    self.imageView.image = [UIImage generateQRCodeWithConfigure:configure];
     self.imageView.center = self.view.center;
 }
 

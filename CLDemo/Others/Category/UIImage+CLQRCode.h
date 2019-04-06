@@ -11,37 +11,40 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, CLQRCodeCorrectionLevel) {
-    CLQRCodeCorrectionLevelLow, // 低纠正率.
-    CLQRCodeCorrectionLevelNormal, // 一般纠正率.
-    CLQRCodeCorrectionLevelSuperior, // 较高纠正率.
-    CLQRCodeCorrectionLevelHight, // 高纠正率.
+    CLQRCodeCorrectionLevelLow, ///< 低纠正率.
+    CLQRCodeCorrectionLevelNormal, ///< 一般纠正率.
+    CLQRCodeCorrectionLevelSuperior, ///< 较高纠正率.
+    CLQRCodeCorrectionLevelHight, ///< 高纠正率.
 };
 
 
-@interface CLCorrectionModel : NSObject
+@interface CLCorrectionConfigure : NSObject
 
 ///二维码字符串
-@property (nonatomic, copy, readonly) NSString *text;
+@property (nonatomic, copy) NSString *text;
 ///纠正等级，越高越容易识别，二维码越复杂
-@property (nonatomic, assign, readonly) CLQRCodeCorrectionLevel correctionLevel;
+@property (nonatomic, assign) CLQRCodeCorrectionLevel correctionLevel;
 ///对应纠错率二维码矩阵点数宽度倍数(px) 10-100,越大越清晰，消耗资源越多，生成二维码越慢
-@property (nonatomic, assign, readonly) NSInteger delta;
+@property (nonatomic, assign) NSInteger delta;
 ///随机颜色数组
-@property (nonatomic, strong, readonly) NSMutableArray<UIColor *> *colorsArray;
+@property (nonatomic, strong) NSMutableArray<UIColor *> *colorsArray;
+///左上定位点内圈颜色
+@property (nonatomic, strong) UIColor *leftTopInColor;
+///左上定位点外圈颜色
+@property (nonatomic, strong) UIColor *leftTopOutColor;
+///右上定位点内圈颜色
+@property (nonatomic, strong) UIColor *rightTopInColor;
+///右上定位点外圈颜色
+@property (nonatomic, strong) UIColor *rightTopOutColor;
+///左下定位点内圈颜色
+@property (nonatomic, strong) UIColor *leftBottomInColor;
+///左下定位点外圈颜色
+@property (nonatomic, strong) UIColor *leftBottomOutColor;
 
 /**
- 初始化model
-
- @param text 二维码字符串
- @param correctionLevel 纠正等级，越高越容易识别，二维码越复杂
- @param delta 对应纠错率二维码矩阵点数宽度倍数(px) 10-100,越大越清晰，消耗资源越多，生成二维码越慢
- @return model
+ 初始化配置，不会循环引用
  */
-- (instancetype)initWithText:(nonnull NSString *)text correctionLevel:(CLQRCodeCorrectionLevel) correctionLevel delta:(NSInteger) delta colorsArray:(NSMutableArray<UIColor *> *) colorsArray NS_DESIGNATED_INITIALIZER;
-
-- (instancetype)init NS_UNAVAILABLE;
-
-+ (instancetype)new NS_UNAVAILABLE;
++ (instancetype)initConfigure:(nonnull NSString *)text callBack:(void(^)(CLCorrectionConfigure *configure))callBack;
 
 @end
 
@@ -52,10 +55,10 @@ typedef NS_ENUM(NSInteger, CLQRCodeCorrectionLevel) {
 /**
  根据model生成二维码
 
- @param model model
+ @param configure 配置
  @return 二维码图片
  */
-+(nullable UIImage *)generateQRCodeWithModel:(nonnull CLCorrectionModel *)model;
++(nullable UIImage *)generateQRCodeWithConfigure:(nonnull CLCorrectionConfigure *)configure;
 
 
 @end
