@@ -23,7 +23,17 @@
 
     self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
     [self.view addSubview:self.imageView];
-
+    CLCorrectionConfigure *configure = [CLCorrectionConfigure initConfigure:@"https://www.baidu.com" callBack:^(CLCorrectionConfigure * _Nonnull configure) {
+        configure.leftTopOutColor = cl_RandomColor;
+        configure.leftTopInColor = cl_RandomColor;
+        configure.rightTopOutColor = cl_RandomColor;
+        configure.rightTopInColor = cl_RandomColor;
+        configure.leftBottomOutColor = cl_RandomColor;
+        configure.leftBottomInColor = cl_RandomColor;
+        configure.colorsArray = [NSMutableArray arrayWithArray:@[cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor, cl_RandomColor]];
+    }];
+    self.imageView.image = [UIImage generateQRCodeWithConfigure:configure];
+    self.imageView.center = self.view.center;
     
 }
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {

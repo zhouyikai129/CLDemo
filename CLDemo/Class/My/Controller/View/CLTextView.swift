@@ -261,7 +261,7 @@ extension CLTextView: UITextViewDelegate {
             }
         }
         //记录
-        let startString: String = String.init(stringLiteral: text)
+        let oldText: String = String.init(stringLiteral: text)
         //限制字数
         if textView.text.count > configure.maxCount {
             var range: NSRange
@@ -305,7 +305,7 @@ extension CLTextView: UITextViewDelegate {
         
         remakeConstraints()
         
-        if  startString != textView.text {
+        if  oldText != textView.text {
             delegate?.textViewDidChange(textView: self)
         }
     }
