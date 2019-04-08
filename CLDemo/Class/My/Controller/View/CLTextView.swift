@@ -155,7 +155,11 @@ class CLTextView: UIView {
     private lazy var lengthLabel: UILabel = {
         let lengthLabel = UILabel()
         lengthLabel.font = configure.lengthFont
-        lengthLabel.text = String.init(format: "0/%ld", configure.maxBytesLength)
+        if configure.statistics == .bytesLength {
+            lengthLabel.text = String.init(format: "0/%ld", configure.maxBytesLength)
+        }else {
+            lengthLabel.text = String.init(format: "0/%ld", configure.maxCount)
+        }
         addSubview(lengthLabel)
         return lengthLabel
     }()

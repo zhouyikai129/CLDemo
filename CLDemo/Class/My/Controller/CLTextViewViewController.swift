@@ -39,6 +39,7 @@ class CLTextViewViewController: CLBaseViewController {
         textView.updateWithConfigure({ (configure) in
             configure.statistics = .count
             configure.showLengthLabel = true
+            configure.maxBytesLength = 20
             configure.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: -10, right: -10)
         })
         return textView
