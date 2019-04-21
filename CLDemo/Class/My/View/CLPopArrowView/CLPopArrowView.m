@@ -39,7 +39,6 @@
     return self;
 }
 
-
 -(void)drawRect:(CGRect)rect
 {
     CGContextRef context=UIGraphicsGetCurrentContext();
@@ -108,159 +107,100 @@
 }
 -(void)popView
 {
-    NSArray *result=[self.contentView subviews];
-    for (UIView *view in result) {
-        view.hidden=YES;
-    }
-    
     UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
     [keyWindow addSubview:self];
-    //动画效果弹出
-    self.alpha = 0;
-    
     if (_direction==CLArrowDirectionLeftTop) {
-        self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(0, 0);
+        self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y-20, self.width,self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y-20, self.width,self. height);
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionLeftMiddle) {
-        self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(0, 0.5);
+        self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y-self.height/2, self.width,self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y-self.height/2, self.width,self. height);
-            
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionLeftBottom) {
-        self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(0, 1);
+        self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y-self.height+20, self.width,self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y-self.height+20, self.width,self. height);
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionRightTop) {
-        self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(1, 0);
+        self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y-20, -self.width,self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y-20, -self.width,self. height);
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionRightMiddle) {
-        self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(1, 0.5);
+        self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y-self.height/2, -self.width,self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y-self.height/2, -self.width,self. height);
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionRightBottom) {
-        self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(1, 1);
+        self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y-self.height+20, -self.width,self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y-self.height+20, -self.width,self. height);
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionTopLeft) {
-        self.contentView.frame = CGRectMake(self.origin.x, self.origin.y+5, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(0, 0);
+        self.contentView.frame = CGRectMake(self.origin.x-20, self.origin.y+5, self.width,self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x-20, self.origin.y+5, self.width,self. height);
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionTopMiddle) {
-        self.contentView.frame = CGRectMake(self.origin.x, self.origin.y+5, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(0.5, 0);
+        self.contentView.frame = CGRectMake(self.origin.x-self.width/2, self.origin.y+5, self.width,self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x-self.width/2, self.origin.y+5, self.width,self. height);
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionTopRight) {
-        self.contentView.frame = CGRectMake(self.origin.x, self.origin.y+5, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(1, 0);
+        self.contentView.frame = CGRectMake(self.origin.x+20, self.origin.y+5, -self.width,self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x+20, self.origin.y+5, -self.width,self. height);
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionBottomLeft) {
-        self.contentView.frame = CGRectMake(self.origin.x, self.origin.y-5, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(0, 1);
+        self.contentView.frame = CGRectMake(self.origin.x-20, self.origin.y-5, self.width,-self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x-20, self.origin.y-5, self.width,-self. height);
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionBottomModdle) {
-        self.contentView.frame = CGRectMake(self.origin.x, self.origin.y-5, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(0.5, 1);
+        self.contentView.frame = CGRectMake(self.origin.x-self.width/2, self.origin.y-5, self.width,-self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x-self.width/2, self.origin.y-5, self.width,-self. height);
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionBottomRight) {
-        self.contentView.frame = CGRectMake(self.origin.x, self.origin.y-5, 0, 0);
+        self.contentView.layer.anchorPoint = CGPointMake(1, 1);
+        self.contentView.frame = CGRectMake(self.origin.x-self.width+20, self.origin.y-5, self.width,-self. height);
+        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
-            self.alpha = 1;
-            self.contentView.frame = CGRectMake(self.origin.x-self.width+20, self.origin.y-5, self.width,-self. height);
-        }completion:^(BOOL finished) {
-            NSArray *result=[self.contentView subviews];
-            for (UIView *view in result) {
-                view.hidden=NO;
-            }
+            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }
 }
 
 -(void)dismiss
 {
-    [self.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    //动画效果淡出
+    self.contentView.transform = CGAffineTransformMakeScale(1, 1);
     [UIView animateWithDuration:0.2 animations:^{
-        self.alpha = 0;
-        self.contentView.frame = CGRectMake(self.origin.x, self.origin.y, 0, 0);
+        self.contentView.transform = CGAffineTransformMakeScale(0.15, 0.15);
     } completion:^(BOOL finished) {
         if (finished) {
             [self removeFromSuperview];
