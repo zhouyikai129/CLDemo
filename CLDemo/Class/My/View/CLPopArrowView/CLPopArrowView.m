@@ -48,54 +48,54 @@
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX + 5, startY - 5);
         CGContextAddLineToPoint(context, startX + 5, startY + 5);
-    }else if (_direction==CLArrowDirectionLeftMiddle) {
+    }else if (_direction == CLArrowDirectionLeftMiddle) {
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX + 5, startY - 5);
         CGContextAddLineToPoint(context, startX + 5, startY + 5);
-    }else if (_direction==CLArrowDirectionLeftBottom) {
+    }else if (_direction == CLArrowDirectionLeftBottom) {
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX + 5, startY - 5);
         CGContextAddLineToPoint(context, startX + 5, startY + 5);
-    }else if (_direction==CLArrowDirectionRightTop) {
+    }else if (_direction == CLArrowDirectionRightTop) {
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX - 5, startY - 5);
         CGContextAddLineToPoint(context, startX - 5, startY + 5);
-    }else if (_direction==CLArrowDirectionRightMiddle) {
+    }else if (_direction == CLArrowDirectionRightMiddle) {
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX - 5, startY - 5);
         CGContextAddLineToPoint(context, startX - 5, startY + 5);
-    }else if (_direction==CLArrowDirectionRightBottom) {
+    }else if (_direction == CLArrowDirectionRightBottom) {
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX - 5, startY - 5);
         CGContextAddLineToPoint(context, startX - 5, startY + 5);
-    }else if (_direction==CLArrowDirectionTopLeft) {
+    }else if (_direction == CLArrowDirectionTopLeft) {
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX + 5, startY + 5);
         CGContextAddLineToPoint(context, startX -5, startY + 5);
-    }else if (_direction==CLArrowDirectionTopMiddle) {
+    }else if (_direction == CLArrowDirectionTopMiddle) {
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX + 5, startY + 5);
         CGContextAddLineToPoint(context, startX - 5, startY + 5);
-    }else if (_direction==CLArrowDirectionTopRight) {
+    }else if (_direction == CLArrowDirectionTopRight) {
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX + 5, startY + 5);
         CGContextAddLineToPoint(context, startX - 5, startY+ 5);
-    }else if (_direction==CLArrowDirectionBottomLeft) {
+    }else if (_direction == CLArrowDirectionBottomLeft) {
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX - 5, startY - 5);
         CGContextAddLineToPoint(context, startX + 5, startY - 5);
-    }else if (_direction==CLArrowDirectionBottomModdle) {
+    }else if (_direction == CLArrowDirectionBottomModdle) {
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX - 5, startY - 5);
         CGContextAddLineToPoint(context, startX + 5, startY - 5);
-    }else if (_direction==CLArrowDirectionBottomRight) {
+    }else if (_direction == CLArrowDirectionBottomRight) {
         CGContextMoveToPoint(context, startX, startY);
         CGContextAddLineToPoint(context, startX - 5, startY - 5);
         CGContextAddLineToPoint(context, startX + 5, startY - 5);
     }
     CGContextClosePath(context);
-    [self.contentView.backgroundColor setFill];
-    [self.backgroundColor setStroke];
+    [[UIColor redColor] setFill];
+    [[UIColor orangeColor] setStroke];
     CGContextDrawPath(context, kCGPathFillStroke);
 }
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
