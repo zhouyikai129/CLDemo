@@ -23,17 +23,17 @@
 
 @implementation CLPopArrowView
 
--(instancetype)initWithOrigin:(CGPoint)origin Width:(CGFloat)width Height:(float)height Direction:(CLArrowDirection)direction
+-(instancetype)initWithOrigin:(CGPoint)origin width:(CGFloat)width Height:(float)height direction:(CLArrowDirection)direction
 {
     CGSize size = [UIScreen mainScreen].bounds.size;
     if (self = [super initWithFrame:CGRectMake(0, 0, size.width, size.height)]) {
-        self.backgroundColor=[UIColor clearColor];
+        self.backgroundColor = [UIColor clearColor];
         self.origin = origin;
         self.height = height;
         self.width = width;
         self.direction = direction;
         self.contentView = [[UIView alloc]initWithFrame:CGRectMake(origin.x, origin.y, width, height)];
-        self.contentView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:1];
+        self.contentView.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.contentView];
     }
     return self;
@@ -41,57 +41,57 @@
 
 -(void)drawRect:(CGRect)rect
 {
-    CGContextRef context=UIGraphicsGetCurrentContext();
+    CGContextRef context = UIGraphicsGetCurrentContext();
     CGFloat startX = self.origin.x;
     CGFloat startY = self.origin.y;
-    if (_direction==CLArrowDirectionLeftTop) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX+5, startY-5);
-        CGContextAddLineToPoint(context, startX+5, startY+5);
+    if (_direction == CLArrowDirectionLeftTop) {
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX + 5, startY - 5);
+        CGContextAddLineToPoint(context, startX + 5, startY + 5);
     }else if (_direction==CLArrowDirectionLeftMiddle) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX+5, startY-5);
-        CGContextAddLineToPoint(context, startX+5, startY+5);
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX + 5, startY - 5);
+        CGContextAddLineToPoint(context, startX + 5, startY + 5);
     }else if (_direction==CLArrowDirectionLeftBottom) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX+5, startY-5);
-        CGContextAddLineToPoint(context, startX+5, startY+5);
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX + 5, startY - 5);
+        CGContextAddLineToPoint(context, startX + 5, startY + 5);
     }else if (_direction==CLArrowDirectionRightTop) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX-5, startY-5);
-        CGContextAddLineToPoint(context, startX-5, startY+5);
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX - 5, startY - 5);
+        CGContextAddLineToPoint(context, startX - 5, startY + 5);
     }else if (_direction==CLArrowDirectionRightMiddle) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX-5, startY-5);
-        CGContextAddLineToPoint(context, startX-5, startY+5);
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX - 5, startY - 5);
+        CGContextAddLineToPoint(context, startX - 5, startY + 5);
     }else if (_direction==CLArrowDirectionRightBottom) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX-5, startY-5);
-        CGContextAddLineToPoint(context, startX-5, startY+5);
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX - 5, startY - 5);
+        CGContextAddLineToPoint(context, startX - 5, startY + 5);
     }else if (_direction==CLArrowDirectionTopLeft) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX + 5, startY +5);
-        CGContextAddLineToPoint(context, startX -5, startY+5);
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX + 5, startY + 5);
+        CGContextAddLineToPoint(context, startX -5, startY + 5);
     }else if (_direction==CLArrowDirectionTopMiddle) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX + 5, startY +5);
-        CGContextAddLineToPoint(context, startX -5, startY+5);
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX + 5, startY + 5);
+        CGContextAddLineToPoint(context, startX - 5, startY + 5);
     }else if (_direction==CLArrowDirectionTopRight) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX + 5, startY +5);
-        CGContextAddLineToPoint(context, startX -5, startY+5);
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX + 5, startY + 5);
+        CGContextAddLineToPoint(context, startX - 5, startY+ 5);
     }else if (_direction==CLArrowDirectionBottomLeft) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX - 5, startY -5);
-        CGContextAddLineToPoint(context, startX +5, startY-5);
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX - 5, startY - 5);
+        CGContextAddLineToPoint(context, startX + 5, startY - 5);
     }else if (_direction==CLArrowDirectionBottomModdle) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX - 5, startY -5);
-        CGContextAddLineToPoint(context, startX +5, startY-5);
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX - 5, startY - 5);
+        CGContextAddLineToPoint(context, startX + 5, startY - 5);
     }else if (_direction==CLArrowDirectionBottomRight) {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, startX - 5, startY -5);
-        CGContextAddLineToPoint(context, startX +5, startY-5);
+        CGContextMoveToPoint(context, startX, startY);
+        CGContextAddLineToPoint(context, startX - 5, startY - 5);
+        CGContextAddLineToPoint(context, startX + 5, startY - 5);
     }
     CGContextClosePath(context);
     [self.contentView.backgroundColor setFill];
@@ -111,84 +111,84 @@
     [keyWindow addSubview:self];
     if (_direction==CLArrowDirectionLeftTop) {
         self.contentView.layer.anchorPoint = CGPointMake(0, 0);
-        self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y-20, self.width,self. height);
+        self.contentView.frame = CGRectMake(self.origin.x + 5, self.origin.y - 20, self.width,self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionLeftMiddle) {
         self.contentView.layer.anchorPoint = CGPointMake(0, 0.5);
-        self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y-self.height/2, self.width,self. height);
+        self.contentView.frame = CGRectMake(self.origin.x + 5, self.origin.y - self.height * 0.5, self.width,self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionLeftBottom) {
         self.contentView.layer.anchorPoint = CGPointMake(0, 1);
-        self.contentView.frame = CGRectMake(self.origin.x+5, self.origin.y-self.height+20, self.width,self. height);
+        self.contentView.frame = CGRectMake(self.origin.x + 5, self.origin.y - self.height + 20, self.width,self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionRightTop) {
         self.contentView.layer.anchorPoint = CGPointMake(1, 0);
-        self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y-20, -self.width,self. height);
+        self.contentView.frame = CGRectMake(self.origin.x - 5, self.origin.y - 20, -self.width,self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionRightMiddle) {
         self.contentView.layer.anchorPoint = CGPointMake(1, 0.5);
-        self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y-self.height/2, -self.width,self. height);
+        self.contentView.frame = CGRectMake(self.origin.x - 5, self.origin.y - self.height * 0.5, -self.width,self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionRightBottom) {
         self.contentView.layer.anchorPoint = CGPointMake(1, 1);
-        self.contentView.frame = CGRectMake(self.origin.x-5, self.origin.y-self.height+20, -self.width,self. height);
+        self.contentView.frame = CGRectMake(self.origin.x - 5, self.origin.y - self.height + 20, -self.width,self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionTopLeft) {
         self.contentView.layer.anchorPoint = CGPointMake(0, 0);
-        self.contentView.frame = CGRectMake(self.origin.x-20, self.origin.y+5, self.width,self. height);
+        self.contentView.frame = CGRectMake(self.origin.x - 20, self.origin.y + 5, self.width,self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionTopMiddle) {
         self.contentView.layer.anchorPoint = CGPointMake(0.5, 0);
-        self.contentView.frame = CGRectMake(self.origin.x-self.width/2, self.origin.y+5, self.width,self. height);
+        self.contentView.frame = CGRectMake(self.origin.x - self.width * 0.5, self.origin.y + 5, self.width,self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionTopRight) {
         self.contentView.layer.anchorPoint = CGPointMake(1, 0);
-        self.contentView.frame = CGRectMake(self.origin.x+20, self.origin.y+5, -self.width,self. height);
+        self.contentView.frame = CGRectMake(self.origin.x + 20, self.origin.y + 5, -self.width,self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionBottomLeft) {
         self.contentView.layer.anchorPoint = CGPointMake(0, 1);
-        self.contentView.frame = CGRectMake(self.origin.x-20, self.origin.y-5, self.width,-self. height);
+        self.contentView.frame = CGRectMake(self.origin.x - 20, self.origin.y - 5, self.width,-self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionBottomModdle) {
         self.contentView.layer.anchorPoint = CGPointMake(0.5, 1);
-        self.contentView.frame = CGRectMake(self.origin.x-self.width/2, self.origin.y-5, self.width,-self. height);
+        self.contentView.frame = CGRectMake(self.origin.x - self.width * 0.5, self.origin.y - 5, self.width,-self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
         }];
     }else if (_direction==CLArrowDirectionBottomRight) {
         self.contentView.layer.anchorPoint = CGPointMake(1, 1);
-        self.contentView.frame = CGRectMake(self.origin.x-self.width+20, self.origin.y-5, self.width,-self. height);
+        self.contentView.frame = CGRectMake(self.origin.x - self.width + 20, self.origin.y - 5, self.width,-self. height);
         self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
         [UIView animateWithDuration:0.2 animations:^{
             self.contentView.transform = CGAffineTransformMakeScale(1, 1);
