@@ -24,7 +24,7 @@ typedef NS_ENUM(NSUInteger,CLArrowDirection){
     CLArrowDirectionTopMiddle,///<上中
     CLArrowDirectionTopRight,///<上右
     CLArrowDirectionBottomLeft,///<下左
-    CLArrowDirectionBottomModdle,///<下中
+    CLArrowDirectionBottomMiddle,///<下中
     CLArrowDirectionBottomRight,///<下右
     
 };
