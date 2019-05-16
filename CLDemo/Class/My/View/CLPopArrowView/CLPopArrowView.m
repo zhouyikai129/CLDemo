@@ -7,6 +7,7 @@
 //
 
 #import "CLPopArrowView.h"
+#import "UIColor+CLHex.h"
 
 @interface CLPopArrowView ()
 
@@ -24,181 +25,177 @@
 ///animation
 @property (nonatomic, strong) CABasicAnimation *animation;
 
+@property (nonatomic, strong) UIView *contentView;
+
 @end
 
 
 @implementation CLPopArrowView
 
--(instancetype)initWithOrigin:(CGPoint)origin width:(CGFloat)width Height:(float)height direction:(CLArrowDirection)direction
-{
+-(instancetype)initWithOrigin:(CGPoint)origin width:(CGFloat)width Height:(float)height direction:(CLArrowDirection)direction {
     CGSize size = [UIScreen mainScreen].bounds.size;
     if (self = [super initWithFrame:CGRectMake(0, 0, size.width, size.height)]) {
+        [self addTarget:self action:@selector(tapAction) forControlEvents:UIControlEventTouchUpInside];
         self.backgroundColor = [UIColor clearColor];
         self.origin = origin;
         self.height = height;
         self.width = width;
         self.direction = direction;
-        self.contentView = [[UIView alloc]initWithFrame:CGRectMake(origin.x, origin.y, width, height)];
-        self.contentView.backgroundColor = [UIColor lightGrayColor];
-        [self addSubview:self.contentView];
     }
     return self;
 }
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    UITouch *touch = [touches anyObject];
-    if (![touch.view isEqual:self.contentView]) {
-        [self dismiss];
-    }
-}
--(void)popView
-{
+-(void)popView {
     CGFloat spaceWidth = 10;
     CGFloat marginWidth = 20;
-
+    
     UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
     [keyWindow addSubview:self];
-
-    if (_direction == CLArrowDirectionLeftTop) {
-        self.contentView.layer.anchorPoint = CGPointMake(0, 0);
-        self.contentView.frame = CGRectMake(self.origin.x + spaceWidth, self.origin.y - marginWidth, self.width,self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
-        }];
-    }else if (_direction == CLArrowDirectionLeftMiddle) {
-        self.contentView.layer.anchorPoint = CGPointMake(0, 0.5);
-        self.contentView.frame = CGRectMake(self.origin.x + spaceWidth, self.origin.y - self.height * 0.5, self.width,self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
-        }];
-    }else if (_direction == CLArrowDirectionLeftBottom) {
-        self.contentView.layer.anchorPoint = CGPointMake(0, 1);
-        self.contentView.frame = CGRectMake(self.origin.x + spaceWidth, self.origin.y - self.height + marginWidth, self.width,self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
-        }];
-    }else if (_direction == CLArrowDirectionRightTop) {
-        self.contentView.layer.anchorPoint = CGPointMake(1, 0);
-        self.contentView.frame = CGRectMake(self.origin.x - spaceWidth, self.origin.y - marginWidth, -self.width,self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
-        }];
-    }else if (_direction == CLArrowDirectionRightMiddle) {
-        self.contentView.layer.anchorPoint = CGPointMake(1, 0.5);
-        self.contentView.frame = CGRectMake(self.origin.x - spaceWidth, self.origin.y - self.height * 0.5, -self.width,self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
-        }];
-    }else if (_direction == CLArrowDirectionRightBottom) {
-        self.contentView.layer.anchorPoint = CGPointMake(1, 1);
-        self.contentView.frame = CGRectMake(self.origin.x - spaceWidth, self.origin.y - self.height + marginWidth, -self.width,self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
-        }];
-    }else if (_direction == CLArrowDirectionTopLeft) {
-        self.contentView.layer.anchorPoint = CGPointMake(0, 0);
-        self.contentView.frame = CGRectMake(self.origin.x - marginWidth, self.origin.y + spaceWidth, self.width,self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
-        }];
-    }else if (_direction == CLArrowDirectionTopMiddle) {
-        self.contentView.layer.anchorPoint = CGPointMake(0.5, 0);
-        self.contentView.frame = CGRectMake(self.origin.x - self.width * 0.5, self.origin.y + spaceWidth, self.width,self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];\
-        }];
-    }else if (_direction == CLArrowDirectionTopRight) {
-        self.contentView.layer.anchorPoint = CGPointMake(1, 0);
-        self.contentView.frame = CGRectMake(self.origin.x + marginWidth, self.origin.y + spaceWidth, -self.width,self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
-        }];
-    }else if (_direction == CLArrowDirectionBottomLeft) {
-        self.contentView.layer.anchorPoint = CGPointMake(0, 1);
-        self.contentView.frame = CGRectMake(self.origin.x - marginWidth, self.origin.y - spaceWidth, self.width,-self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
-        }];
-    }else if (_direction == CLArrowDirectionBottomMiddle) {
-        self.contentView.layer.anchorPoint = CGPointMake(0.5, 1);
-        self.contentView.frame = CGRectMake(self.origin.x - self.width * 0.5, self.origin.y - spaceWidth, self.width,-self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
-        }];
-    }else if (_direction == CLArrowDirectionBottomRight) {
-        self.contentView.layer.anchorPoint = CGPointMake(1, 1);
-        self.contentView.frame = CGRectMake(self.origin.x - self.width + marginWidth, self.origin.y - spaceWidth, self.width,-self.height);
-        self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
-        [UIView animateWithDuration:0.2 animations:^{
-            self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-        }completion:^(BOOL finished) {
-            self.shapeLayer.path = [self shapeLayerPath];
-            [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
-        }];
-    }
-}
-
--(void)dismiss
-{
-    self.contentView.transform = CGAffineTransformMakeScale(1, 1);
-    [self.shapeLayer removeFromSuperlayer];
-    [UIView animateWithDuration:0.2 animations:^{
-        self.contentView.transform = CGAffineTransformMakeScale(0.15, 0.15);
-    } completion:^(BOOL finished) {
-        if (finished) {
-            [self removeFromSuperview];
+    //主线程
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self->_direction == CLArrowDirectionLeftTop) {
+            self.contentView.layer.anchorPoint = CGPointMake(0, 0);
+            self.contentView.frame = CGRectMake(self.origin.x + spaceWidth, self.origin.y - marginWidth, self.width,self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
+            }];
+        }else if (self->_direction == CLArrowDirectionLeftMiddle) {
+            self.contentView.layer.anchorPoint = CGPointMake(0, 0.5);
+            self.contentView.frame = CGRectMake(self.origin.x + spaceWidth, self.origin.y - self.height * 0.5, self.width,self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
+            }];
+        }else if (self->_direction == CLArrowDirectionLeftBottom) {
+            self.contentView.layer.anchorPoint = CGPointMake(0, 1);
+            self.contentView.frame = CGRectMake(self.origin.x + spaceWidth, self.origin.y - self.height + marginWidth, self.width,self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
+            }];
+        }else if (self->_direction == CLArrowDirectionRightTop) {
+            self.contentView.layer.anchorPoint = CGPointMake(1, 0);
+            self.contentView.frame = CGRectMake(self.origin.x - spaceWidth, self.origin.y - marginWidth, -self.width,self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
+            }];
+        }else if (self->_direction == CLArrowDirectionRightMiddle) {
+            self.contentView.layer.anchorPoint = CGPointMake(1, 0.5);
+            self.contentView.frame = CGRectMake(self.origin.x - spaceWidth, self.origin.y - self.height * 0.5, -self.width,self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
+            }];
+        }else if (self->_direction == CLArrowDirectionRightBottom) {
+            self.contentView.layer.anchorPoint = CGPointMake(1, 1);
+            self.contentView.frame = CGRectMake(self.origin.x - spaceWidth, self.origin.y - self.height + marginWidth, -self.width,self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
+            }];
+        }else if (self->_direction == CLArrowDirectionTopLeft) {
+            self.contentView.layer.anchorPoint = CGPointMake(0, 0);
+            self.contentView.frame = CGRectMake(self.origin.x - marginWidth, self.origin.y + spaceWidth, self.width,self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
+            }];
+        }else if (self->_direction == CLArrowDirectionTopMiddle) {
+            self.contentView.layer.anchorPoint = CGPointMake(0.5, 0);
+            self.contentView.frame = CGRectMake(self.origin.x - self.width * 0.5, self.origin.y + spaceWidth, self.width,self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];\
+            }];
+        }else if (self->_direction == CLArrowDirectionTopRight) {
+            self.contentView.layer.anchorPoint = CGPointMake(1, 0);
+            self.contentView.frame = CGRectMake(self.origin.x + marginWidth, self.origin.y + spaceWidth, -self.width,self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
+            }];
+        }else if (self->_direction == CLArrowDirectionBottomLeft) {
+            self.contentView.layer.anchorPoint = CGPointMake(0, 1);
+            self.contentView.frame = CGRectMake(self.origin.x - marginWidth, self.origin.y - spaceWidth, self.width,-self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
+            }];
+        }else if (self->_direction == CLArrowDirectionBottomMiddle) {
+            self.contentView.layer.anchorPoint = CGPointMake(0.5, 1);
+            self.contentView.frame = CGRectMake(self.origin.x - self.width * 0.5, self.origin.y - spaceWidth, self.width,-self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
+            }];
+        }else if (self->_direction == CLArrowDirectionBottomRight) {
+            self.contentView.layer.anchorPoint = CGPointMake(1, 1);
+            self.contentView.frame = CGRectMake(self.origin.x - self.width + marginWidth, self.origin.y - spaceWidth, self.width,-self.height);
+            self.contentView.transform = CGAffineTransformMakeScale(0.3, 0.3);
+            [UIView animateWithDuration:0.2 animations:^{
+                self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+            }completion:^(BOOL __unused finished) {
+                self.shapeLayer.path = [self shapeLayerPath];
+                [self.shapeLayer addAnimation:self.animation forKey:@"shapeLayerAnimation"];
+            }];
         }
-    }];
+    });
 }
-
+-(void)dismiss:(nullable void (^)(void)) completion {
+    //主线程
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+        [self.shapeLayer removeFromSuperlayer];
+        [UIView animateWithDuration:0.2 animations:^{
+            self.contentView.transform = CGAffineTransformMakeScale(0, 0);
+        } completion:^(BOOL __unused finished) {
+            [self removeFromSuperview];
+            if (completion) {
+                completion();
+            }
+        }];
+    });
+}
+- (void)tapAction {
+    [self dismiss:nil];
+}
 - (CGPathRef)shapeLayerPath {
     CGFloat spaceWidth = 10;
-
+    
     CGFloat startX = CGRectGetMinX(self.contentView.frame);
     CGFloat startY = CGRectGetMinY(self.contentView.frame);
     
@@ -264,15 +261,24 @@
     [path closePath];
     return path.CGPath;
 }
-
+- (UIView *) contentView {
+    if (_contentView == nil) {
+        _contentView = [[UIView alloc]initWithFrame:CGRectMake(self.origin.x, self.origin.y, self.width, self.height)];
+        _contentView.autoresizesSubviews = YES;
+        _contentView.clipsToBounds = YES;
+        [self addSubview:_contentView];
+    }
+    return _contentView;
+}
 - (CAShapeLayer *) shapeLayer {
     if (_shapeLayer == nil) {
         _shapeLayer = [[CAShapeLayer alloc] init];
         _shapeLayer.frame = self.frame;
-        _shapeLayer.strokeColor = [UIColor orangeColor].CGColor;
-        _shapeLayer.fillColor = [UIColor clearColor].CGColor;
-        _shapeLayer.lineWidth = 1;
+        _shapeLayer.strokeColor = [UIColor colorWithRGBHex:0xb2b2b2].CGColor;
+        _shapeLayer.fillColor = self.contentView.backgroundColor.CGColor;
+        _shapeLayer.lineWidth = 0.5;
         [self.layer addSublayer:_shapeLayer];
+        [self.layer insertSublayer:_shapeLayer below:self.contentView.layer];
     }
     return _shapeLayer;
 }
@@ -282,10 +288,9 @@
         _animation = [CABasicAnimation animationWithKeyPath:@"opacity"];
         _animation.duration = 0.2;
         _animation.removedOnCompletion = YES;
-        _animation.fromValue = [NSNumber numberWithFloat:0.3];
-        _animation.toValue = [NSNumber numberWithFloat:1];
+        _animation.fromValue = @(0.3);
+        _animation.toValue = @(1);
     }
     return _animation;
 }
-
 @end
