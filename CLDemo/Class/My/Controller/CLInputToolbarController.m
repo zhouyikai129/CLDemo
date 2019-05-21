@@ -41,7 +41,7 @@
         NSLog(@"我不会被循环引用%@",self);
         configure.textViewMaxLine = 4;
         configure.font = [UIFont systemFontOfSize:10];
-        configure.showMaskView = NO;
+        configure.showMaskView = YES;
 //        configure.cursorColor = [UIColor redColor];
 //        configure.textColor = cl_RandomColor;
 //        configure.backgroundColor = cl_RandomColor;
