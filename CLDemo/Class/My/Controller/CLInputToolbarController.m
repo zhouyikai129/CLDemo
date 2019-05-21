@@ -19,7 +19,7 @@
 @implementation CLInputToolbarController
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.inputToolbar dissmissToolbar];
+    [self.inputToolbar resignFirstResponder];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -63,7 +63,7 @@
 }
 
 -(void)didTouchBtn {
-    [self.inputToolbar showToolbar];
+    [self.inputToolbar becomeFirstResponder];
 }
 -(void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
