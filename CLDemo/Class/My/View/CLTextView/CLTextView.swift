@@ -180,7 +180,8 @@ class CLTextView: UIView {
     ///textView高度
     private func textViewHeight() -> CGFloat {
         let lineH: CGFloat = configure.textFont.lineHeight
-        let contentSizeH: CGFloat = max(ceil(lineH * CGFloat(configure.defaultLine)), textView.contentSize.height)
+        let contentSize = textView.sizeThatFits(CGSize(width: self.frame.size.width - self.configure.edgeInsets.left + self.configure.edgeInsets.right, height: 0))
+        let contentSizeH: CGFloat = max(ceil(lineH * CGFloat(configure.defaultLine)), contentSize.height)
         let maxTextViewHeight: CGFloat = ceil(lineH * CGFloat(configure.textViewMaxLine))
         return min(contentSizeH, maxTextViewHeight)
     }
