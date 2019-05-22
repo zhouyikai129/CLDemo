@@ -31,12 +31,12 @@ class CLTextViewViewController: CLBaseViewController {
         let textView = CLTextView()
         view.addSubview(textView)
         textView.snp.makeConstraints({ (make) in
+            make.top.equalTo(self.topLayoutGuide.snp.bottom)
             if #available(iOS 11.0, *) {
                 make.left.right.equalTo(view.safeAreaLayoutGuide)
             } else {
                 make.left.right.equalTo(0)
             }
-            make.top.equalTo(120).priority(.high)
         })
         textView.updateWithConfigure({ (configure) in
             configure.statistics = .bytesLength
@@ -51,7 +51,6 @@ class CLTextViewViewController: CLBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         textView.delegate = self
-        print(self.textView.height)
         view.backgroundColor = UIColor(red:0.93, green:0.93, blue:0.95, alpha:1.00)
     }
     
@@ -73,7 +72,7 @@ extension CLTextViewViewController: CLTextViewDelegate {
     }
     
     func textViewDidChange(textView: CLTextView) {
-        print("==========\(textView.text)")
+//        print("==========\(textView.text)")
     }
     
 }

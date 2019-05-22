@@ -212,14 +212,12 @@ class CLTextView: UIView {
                 make.right.lessThanOrEqualTo(self.textView.snp.right).priority(.low)
                 make.bottom.lessThanOrEqualTo(self.textView.snp.bottom)
             }
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-            
             self.textView.scrollRangeToVisible(NSRange(location: self.textView.selectedRange.location, length: 1))
         }
     }
     override func layoutSubviews() {
         super.layoutSubviews()
+        remakeConstraints()
         frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: frame.width, height: height)
     }
 }
