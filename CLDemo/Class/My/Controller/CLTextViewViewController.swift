@@ -14,11 +14,13 @@ class CLTextViewViewController: CLBaseViewController {
 
     //MARK:JmoVxia---frame布局
 //    lazy var textView: CLTextView = {
-//        let textView = CLTextView(frame: CGRect(x: 0, y: 120, width: view.frame.width, height: 0))
+//        let textView = CLTextView(frame: CGRect(x: 0, y: 90, width: view.frame.width, height: 0))
 //        view.addSubview(textView)
 //        textView.updateWithConfigure({ (configure) in
 //            configure.statistics = .count
 //            configure.showLengthLabel = true
+//            configure.maxCount = 1000
+//            configure.maxBytesLength = NSIntegerMax
 //            configure.edgeInsets = UIEdgeInsets(top: 10, left: 15, bottom: -10, right: -15)
 //        })
 //        return textView
@@ -39,7 +41,8 @@ class CLTextViewViewController: CLBaseViewController {
         textView.updateWithConfigure({ (configure) in
             configure.statistics = .bytesLength
             configure.showLengthLabel = true
-            configure.maxBytesLength = 20
+            configure.maxBytesLength = 2000
+            configure.maxCount = NSIntegerMax
             configure.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: -10, right: -10)
         })
         return textView
@@ -55,7 +58,7 @@ class CLTextViewViewController: CLBaseViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         //MARK:JmoVxia---frame布局
-//        textView.frame = CGRect(x: 0, y: 120, width: view.frame.width, height: 0)
+//        textView.frame = CGRect(x: 0, y: 90, width: view.frame.width, height: 0)
     }
     
 }
